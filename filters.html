@@ -2,16 +2,38 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Spotify Song Search</title>
+  <title>Search for a Song</title>
 </head>
 <body>
   <h1>Search for a Song</h1>
-  <input type="text" id="searchQuery" placeholder="Enter song title..." />
-  <button id="searchButton">Search</button>
-  <div id="results"></div>
+  <form id="search-form">
+    <input type="text" id="song-input" placeholder="Enter a song name">
+    <button type="submit">Search</button>
+  </form>
+  <div id="result"></div>
+  <script>
+    const form = document.getElementById('search-form');
+    const resultDiv = document.getElementById('result');
 
-  <!-- JS runs as a module >
-  <script type="module" src="Spotify_API.js"></script>
+    form.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const query = document.getElementById('song-input').value;
+      const response = await fetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=track`, {
+        headers: {
+          'Authorization': 'Bearer YOUR_SPOTIFY_ACCESS_TOKEN'
+        }
+      });
+      const data = await response.json();
+      if (data.tracks.items.length > 0) {
+        resultDiv.innerHTML = '';
+        data.tracks.items.forEach(track => {
+          const player = `<iframe src="https://open.spotify.com/embed/track/${track.id}" width="300" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>`;
+          resultDiv.innerHTML += player + '<br>';
+        });
+      } else {
+        resultDiv.innerHTML = '<p>No results found.</p>';
+      }
+    });
+  </script>
 </body>
 </html>
-
