@@ -36,6 +36,10 @@ async function searchSpotify(query) {
   });
 
   const data = await response.json();
+  console.log("SPOTIFY DATA:", data);  // 🔍 Check this in browser console
+  return data.tracks?.items || [];
+}
+  const data = await response.json();
   return data.tracks.items;  // Returns an array of tracks
 }
 
