@@ -1,5 +1,5 @@
 
-const tokenServerURL = 'https://melon-sage-chickadee.glitch.me';
+const tokenServerURL = 'https://melon-sage-chickadee.glitch.me/token';
 
 // Spotify Access Token 
 let accessToken = '';
