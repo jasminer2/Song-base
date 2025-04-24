@@ -1,4 +1,3 @@
-
 const tokenServerURL = 'https://melon-sage-chickadee.glitch.me/token';
 
 // Spotify Access Token 
@@ -56,16 +55,21 @@ function displayResults(tracks) {
   });
 }
 
-// Event listener for search button
-document.getElementById('searchButton').addEventListener('click', async () => {
-  const query = document.getElementById('searchQuery').value.trim();
+// Initialize search functionality
+async function initializeSearch() {
+  document.getElementById('searchButton').addEventListener('click', async () => {
+    const query = document.getElementById('searchQuery').value.trim();
 
-  if (query) {
-    await ensureAccessToken();
-    const tracks = await searchSpotify(query);
-    displayResults(tracks);
-  } else {
-    alert('Please enter a song name!');
-  }
-});
+    if (query) {
+      await ensureAccessToken();
+      const tracks = await searchSpotify(query);
+      displayResults(tracks);
+    } else {
+      alert('Please enter a song name!');
+    }
+  });
+}
+
+// Export functions to be used in other files
+export { initializeSearch, getSpotifyAccessToken, ensureAccessToken, searchSpotify, displayResults };
 
