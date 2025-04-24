@@ -1,21 +1,12 @@
-// Spotify API credentials
-const clientId = 'f605cace67cb4f53a2c933b9d58c495a';
-const clientSecret = '5f2bbbe9488b42ae8081a68fba54528d';
+// 🔐 Your backend that returns the Spotify access token
+const tokenServerURL = 'https://melon-sage-chickadee.glitch.me';
 
 // Spotify Access Token 
 let accessToken = '';
 
-// Function to get Spotify Access Token (Client Credentials Flow)
+// Function to get Spotify Access Token (via your Glitch backend)
 async function getSpotifyAccessToken() {
-  const response = await fetch('https://accounts.spotify.com/api/token', {
-    method: 'POST',
-    headers: {
-      'Authorization': 'Basic ' + btoa(clientId + ':' + clientSecret),
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    body: 'grant_type=client_credentials',
-  });
-
+  const response = await fetch(tokenServerURL);
   const data = await response.json();
   accessToken = data.access_token;
 }
@@ -36,11 +27,8 @@ async function searchSpotify(query) {
   });
 
   const data = await response.json();
-  console.log("SPOTIFY DATA:", data);  // 🔍 Check this in browser console
+  console.log("SPOTIFY DATA:", data);
   return data.tracks?.items || [];
-}
-  const data = await response.json();
-  return data.tracks.items;  // Returns an array of tracks
 }
 
 // Display results on the page
@@ -56,10 +44,12 @@ function displayResults(tracks) {
       <p><strong>${track.name}</strong> by ${track.artists.map(artist => artist.name).join(', ')}</p>
       <p><em>Album: ${track.album.name}</em></p>
       <a href="${track.external_urls.spotify}" target="_blank">Listen on Spotify</a>
-      ${track.preview_url ? `<audio controls>
-        <source src="${track.preview_url}" type="audio/mpeg">
-        Your browser does not support the audio element.
-      </audio>` : '<p>No preview available.</p>'}
+      ${track.preview_url ? `
+        <audio controls>
+          <source src="${track.preview_url}" type="audio/mpeg">
+          Your browser does not support the audio element.
+        </audio>
+      ` : '<p>No preview available.</p>'}
     `;
 
     resultsDiv.appendChild(trackElement);
@@ -78,6 +68,3 @@ document.getElementById('searchButton').addEventListener('click', async () => {
     alert('Please enter a song name!');
   }
 });
-
-// Optional: Get token on load (if you want to pre-load it)
-getSpotifyAccessToken();
